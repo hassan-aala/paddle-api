@@ -102,6 +102,14 @@ app.get('/admin/all', requireAdmin, async (req, res) => {
   res.json(list);
 });
 
+app.delete('/admin/delete/:id', requireAdmin, async (req, res) => {
+  const booking = await Booking.findByIdAndDelete(req.params.id);
+  if (!booking) return res.status(404).json({ msg: 'Booking not found' });
+  // free the slot
+  await Slot.findByIdAndUpdate(booking.slotId, { status: 'FREE', booking: null });
+  res.json({ msg: 'Deleted' });
+});
+
 // ---------- start ----------
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`API on ${PORT}`));
