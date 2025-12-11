@@ -97,6 +97,11 @@ app.post('/admin/paid', requireAdmin, async (req, res) => {
   res.json({ msg: 'Marked paid' });
 });
 
+app.get('/admin/all', requireAdmin, async (req, res) => {
+  const list = await Booking.find().sort({ createdAt: -1 });
+  res.json(list);
+});
+
 // ---------- start ----------
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`API on ${PORT}`));
